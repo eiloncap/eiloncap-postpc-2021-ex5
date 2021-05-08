@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
                 // TODO: the new TodoItem will be shown as the first item in the Recycler view
                 editTextInsertTask.text.clear()
                 val adapter = TodoItemAdapter(holder.getCurrentItems())
-                adapter.onItemClickCallback = { TodoItem, Boolean ->
+                adapter.onItemClickCallback = {item, isChecked ->
                     // TODO: change tasks orientation
                 }
                 recyclerTodoItemsList.adapter = adapter

@@ -1,5 +1,6 @@
 package exercise.android.reemh.todo_items
 
+import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,6 +36,11 @@ class TodoItemAdapter(tasks: List<TodoItem>) :
         )
         holder.checkBox.text = todoItem.todoItem
         holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
+            holder.checkBox.paintFlags =
+                if (isChecked)
+                    holder.checkBox.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                else
+                    holder.checkBox.paintFlags and (Paint.STRIKE_THRU_TEXT_FLAG.inv())
             val callback = onItemClickCallback ?: return@setOnCheckedChangeListener
             callback(todoItem, isChecked)
         }

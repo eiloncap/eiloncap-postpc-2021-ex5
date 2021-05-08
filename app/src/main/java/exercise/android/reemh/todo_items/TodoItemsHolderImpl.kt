@@ -4,11 +4,12 @@ class TodoItemsHolderImpl : TodoItemsHolder {
 
 
     private val _currentItems = mutableListOf<TodoItem>()
+    private var isDone = false
 
     override fun getCurrentItems(): List<TodoItem> {
         return ArrayList(_currentItems)
     }
-    
+
     override fun addNewInProgressItem(description: String) {
         this._currentItems += TodoItem(todoItem = description, isDone = false)
     }
