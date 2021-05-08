@@ -1,32 +1,45 @@
-package exercise.android.reemh.todo_items;
+package exercise.android.reemh.todo_items
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import android.os.Bundle
+import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+class MainActivity : AppCompatActivity() {
 
-public class MainActivity extends AppCompatActivity {
+    var holder: TodoItemsHolder? = null
 
-  public TodoItemsHolder holder = null;
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        if (holder == null) {
+            holder = TodoItemsHolderImpl()
+        }
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
+        val recyclerTodoItemsList = findViewById<RecyclerView>(R.id.recyclerTodoItemsList)
+        val editTextInsertTask = findViewById<EditText>(R.id.editTextInsertTask)
+        val buttonCreateTodoItem = findViewById<FloatingActionButton>(R.id.buttonCreateTodoItem)
+        editTextInsertTask.text.clear()
 
-    if (holder == null) {
-      holder = new TodoItemsHolderImpl();
+//        val adapter =
+
+        buttonCreateTodoItem.setOnClickListener {
+            if (editTextInsertTask.text.isNotEmpty()) {
+                holder!!.addNewInProgressItem(editTextInsertTask.text.toString())
+                // TODO: a new TodoItem (checkbox not checked) will be created and added to the items list
+                // TODO: the new TodoItem will be shown as the first item in the Recycler view
+                editTextInsertTask.text.clear()
+            }
+        }
+
+//        recyclerTodoItemsList.adapter = adapter
+        recyclerTodoItemsList.layoutManager =
+            LinearLayoutManager(this, RecyclerView.VERTICAL, false)
     }
-
-    // TODO: implement the specs as defined below
-    //    (find all UI components, hook them up, connect everything you need)
-  }
 }
+
 
 /*
 
@@ -39,6 +52,8 @@ SPECS:
         - a new TodoItem (checkbox not checked) will be created and added to the items list
         - the new TodoItem will be shown as the first item in the Recycler view
         - the edit-text input will be erased
+
+
 - the "TodoItems" list is shown in the screen
   * every operation that creates/edits/deletes a TodoItem should immediately be shown in the UI
   * the order of the TodoItems in the UI is:
