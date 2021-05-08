@@ -7,11 +7,11 @@ import android.widget.CheckBox
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 
-class TodoItemAdapter(tasks: MutableList<TodoItem>) :
+class TodoItemAdapter(tasks: List<TodoItem>) :
     RecyclerView.Adapter<TodoItemAdapter.ViewHolder>() {
 
     var onItemClickCallback: ((TodoItem, Boolean) -> Unit)? = null
-    private val _tasks: MutableList<TodoItem> = tasks
+    private val _tasks: List<TodoItem> = tasks
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val checkBox: CheckBox = view.findViewById(R.id.checkBox)
@@ -37,7 +37,6 @@ class TodoItemAdapter(tasks: MutableList<TodoItem>) :
         holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
             val callback = onItemClickCallback ?: return@setOnCheckedChangeListener
             callback(todoItem, isChecked)
-            // TODO: change tasks orientation
         }
     }
 

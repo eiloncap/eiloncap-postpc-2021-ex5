@@ -9,12 +9,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
-    var holder: TodoItemsHolder? = null
+    //    var holder: TodoItemsHolder? = null
+    lateinit var holder: TodoItemsHolder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        if (holder == null) {
+        // TODO: do something else to check that not initialized
+        if (!this::holder.isInitialized) {
             holder = TodoItemsHolderImpl()
         }
 
@@ -22,23 +24,27 @@ class MainActivity : AppCompatActivity() {
         val editTextInsertTask = findViewById<EditText>(R.id.editTextInsertTask)
         val buttonCreateTodoItem = findViewById<FloatingActionButton>(R.id.buttonCreateTodoItem)
         editTextInsertTask.text.clear()
-
-//        val adapter =
-
+        recyclerTodoItemsList.layoutManager =
+            LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         buttonCreateTodoItem.setOnClickListener {
             if (editTextInsertTask.text.isNotEmpty()) {
-                holder!!.addNewInProgressItem(editTextInsertTask.text.toString())
+                holder.addNewInProgressItem(editTextInsertTask.text.toString())
                 // TODO: a new TodoItem (checkbox not checked) will be created and added to the items list
                 // TODO: the new TodoItem will be shown as the first item in the Recycler view
                 editTextInsertTask.text.clear()
+                val adapter = TodoItemAdapter(holder.getCurrentItems())
+                adapter.onItemClickCallback = { TodoItem, Boolean ->
+                    // TODO: change tasks orientation
+                }
+                recyclerTodoItemsList.adapter = adapter
             }
         }
-
-//        recyclerTodoItemsList.adapter = adapter
-        recyclerTodoItemsList.layoutManager =
-            LinearLayoutManager(this, RecyclerView.VERTICAL, false)
     }
 }
+
+// TODO: 1) problem with tests after converting to kotlin
+//       2) is TodoItemsHolder is really a holder?
+//       2) getter doesnt work with copy
 
 
 /*

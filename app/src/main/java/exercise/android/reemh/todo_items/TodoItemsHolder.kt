@@ -1,9 +1,10 @@
 package exercise.android.reemh.todo_items
 
 // TODO: feel free to add/change/remove methods as you want
-interface TodoItemsHolder{
+interface TodoItemsHolder {
+
     /** Get a copy of the current items list  */
-    val currentItems: List<TodoItem>
+    fun getCurrentItems(): List<TodoItem>
 
     /**
      * Creates a new TodoItem and adds it to the list, with the @param description and status=IN-PROGRESS

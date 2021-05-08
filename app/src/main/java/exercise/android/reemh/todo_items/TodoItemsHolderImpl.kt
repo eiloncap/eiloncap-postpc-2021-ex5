@@ -1,11 +1,16 @@
 package exercise.android.reemh.todo_items
 
 class TodoItemsHolderImpl : TodoItemsHolder {
-    override val currentItems = mutableListOf<TodoItem>()
-        get() = field.toMutableList()
 
+
+    private val _currentItems = mutableListOf<TodoItem>()
+
+    override fun getCurrentItems(): List<TodoItem> {
+        return ArrayList(_currentItems)
+    }
+    
     override fun addNewInProgressItem(description: String) {
-        currentItems += TodoItem(todoItem = description, isDone = false)
+        this._currentItems += TodoItem(todoItem = description, isDone = false)
     }
 
     override fun markItemDone(item: TodoItem) {
@@ -17,6 +22,7 @@ class TodoItemsHolderImpl : TodoItemsHolder {
     }
 
     override fun deleteItem(item: TodoItem) {
-        currentItems.remove(item)
+        _currentItems.remove(item)
     }
 }
+
