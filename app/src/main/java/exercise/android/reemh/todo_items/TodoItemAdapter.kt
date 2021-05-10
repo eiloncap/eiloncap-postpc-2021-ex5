@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageButton
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import java.time.format.DateTimeFormatter
 
 class TodoItemAdapter :
     RecyclerView.Adapter<TodoItemAdapter.ViewHolder>() {
@@ -19,6 +21,7 @@ class TodoItemAdapter :
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val checkBox: CheckBox = view.findViewById(R.id.checkBox)
         val deleteButton: ImageButton = view.findViewById(R.id.deleteButton)
+        val textViewDateTime: TextView = view.findViewById(R.id.textViewDateTime)
     }
 
     fun setTasks(newTasksList: List<TodoItem>) {
@@ -43,6 +46,10 @@ class TodoItemAdapter :
             ContextCompat.getColor(view.context, R.color.white)
         else ContextCompat.getColor(view.context, R.color.blue_50)
         view.setBackgroundColor(bgColor)
+
+        holder.textViewDateTime.text =
+            DateTimeFormatter.ofPattern("dd/MM/yy\nHH:mm").format(todoItem.creationDateTime)
+
         checkBox.setOnCheckedChangeListener(null)
         checkBox.text = todoItem.description
         checkBox.isChecked = todoItem.isDone
@@ -58,6 +65,7 @@ class TodoItemAdapter :
         } else {
             deleteButton.visibility = View.GONE
         }
+
         checkBox.setOnCheckedChangeListener { _, isChecked ->
             val callback = onItemClickCallback ?: return@setOnCheckedChangeListener
             callback(todoItem, isChecked)
