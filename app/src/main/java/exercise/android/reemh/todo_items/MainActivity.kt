@@ -1,6 +1,7 @@
 package exercise.android.reemh.todo_items
 
 import android.os.Bundle
+import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -9,12 +10,18 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
-    //    var holder: TodoItemsHolder? = null
+    //        var holder: TodoItemsHolder? = null
     lateinit var holder: TodoItemsHolder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+//        if (holder == null) {
+//            holder = TodoItemsHolderImpl()
+//        }
+
+
         // TODO: do something else to check that not initialized
         if (!this::holder.isInitialized) {
             holder = TodoItemsHolderImpl()
@@ -26,17 +33,28 @@ class MainActivity : AppCompatActivity() {
         editTextInsertTask.text.clear()
         recyclerTodoItemsList.layoutManager =
             LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+
+        val adapter = TodoItemAdapter()
+
+        adapter.onItemClickCallback = { item, isChecked ->
+            if (!item.isDone) {
+                holder.markItemDone(item)
+            } else {
+                holder.markItemInProgress(item)
+            }
+            adapter.setTasks(holder.getCurrentItems())
+        }
+        adapter.onDeleteCallback = { item ->
+            holder.deleteItem(item)
+            adapter.setTasks(holder.getCurrentItems())
+        }
+        recyclerTodoItemsList.adapter = adapter
+
         buttonCreateTodoItem.setOnClickListener {
             if (editTextInsertTask.text.isNotEmpty()) {
                 holder.addNewInProgressItem(editTextInsertTask.text.toString())
-                // TODO: a new TodoItem (checkbox not checked) will be created and added to the items list
-                // TODO: the new TodoItem will be shown as the first item in the Recycler view
                 editTextInsertTask.text.clear()
-                val adapter = TodoItemAdapter(holder.getCurrentItems())
-                adapter.onItemClickCallback = {item, isChecked ->
-                    // TODO: change tasks orientation
-                }
-                recyclerTodoItemsList.adapter = adapter
+                adapter.setTasks(holder.getCurrentItems())
             }
         }
     }
@@ -44,7 +62,7 @@ class MainActivity : AppCompatActivity() {
 
 // TODO: 1) problem with tests after converting to kotlin
 //       2) is TodoItemsHolder is really a holder?
-//       2) getter doesnt work with copy
+//       2) getter doesn't work with copy
 
 
 /*
@@ -58,8 +76,6 @@ SPECS:
         - a new TodoItem (checkbox not checked) will be created and added to the items list
         - the new TodoItem will be shown as the first item in the Recycler view
         - the edit-text input will be erased
-
-
 - the "TodoItems" list is shown in the screen
   * every operation that creates/edits/deletes a TodoItem should immediately be shown in the UI
   * the order of the TodoItems in the UI is:
@@ -71,6 +87,8 @@ SPECS:
   * IN-PROGRESS items should show the checkbox as not checked, and the description text normal
   * upon click on the checkbox, flip the TodoItem's state (if was DONE will be IN-PROGRESS, and vice versa)
   * add a functionality to remove a TodoItem. either by a button, long-click or any other UX as you want
+
+
 - when a screen rotation happens (user flips the screen):
   * the UI should still show the same list of TodoItems
   * the edit-text should store the same user-input (don't erase input upon screen change)
