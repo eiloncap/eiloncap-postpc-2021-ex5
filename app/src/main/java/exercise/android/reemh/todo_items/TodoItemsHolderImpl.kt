@@ -5,9 +5,6 @@ import kotlin.collections.ArrayList
 
 class TodoItemsHolderImpl : TodoItemsHolder {
 
-
-//    private val doneItems = mutableListOf<TodoItem>()
-//    private val inProgressItems = mutableListOf<TodoItem>()
     private val doneItems = TreeSet<TodoItem>()
     private val inProgressItems = TreeSet<TodoItem>()
 

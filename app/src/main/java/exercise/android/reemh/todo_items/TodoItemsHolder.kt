@@ -1,7 +1,8 @@
 package exercise.android.reemh.todo_items
 
-// TODO: feel free to add/change/remove methods as you want
-interface TodoItemsHolder {
+import java.io.Serializable
+
+interface TodoItemsHolder : Serializable {
 
 
     /** Get a copy of the current items list  */
