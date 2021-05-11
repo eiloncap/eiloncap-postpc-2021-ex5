@@ -1,7 +1,7 @@
 package exercise.android.reemh.todo_items
 
+import java.time.LocalDateTime
 import java.util.*
-import kotlin.collections.ArrayList
 
 class TodoItemsHolderImpl : TodoItemsHolder {
 
@@ -9,11 +9,11 @@ class TodoItemsHolderImpl : TodoItemsHolder {
     private val inProgressItems = TreeSet<TodoItem>()
 
     override fun getCurrentItems(): List<TodoItem> {
-        return ArrayList(inProgressItems + doneItems)
+        return inProgressItems.toList() + doneItems.toList()
     }
 
     override fun addNewInProgressItem(description: String) {
-        this.inProgressItems.add(TodoItem(description = description, isDone = false))
+        inProgressItems.add(TodoItem(description = description, isDone = false))
     }
 
     override fun markItemDone(item: TodoItem) {

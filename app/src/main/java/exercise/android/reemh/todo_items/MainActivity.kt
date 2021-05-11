@@ -10,8 +10,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
-    // var holder: TodoItemsHolder? = null
-    private lateinit var holder: TodoItemsHolder
+    lateinit var holder: TodoItemsHolder
     private lateinit var adapter: TodoItemAdapter
     private lateinit var recyclerTodoItemsList: RecyclerView
     private lateinit var editTextInsertTask: EditText

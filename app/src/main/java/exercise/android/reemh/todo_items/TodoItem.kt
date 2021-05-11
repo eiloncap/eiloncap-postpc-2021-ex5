@@ -11,6 +11,10 @@ data class TodoItem(
 ) : Serializable, Comparable<TodoItem> {
 
     override fun compareTo(other: TodoItem): Int {
-        return other.creationDateTime.compareTo(this.creationDateTime)
+        if (this === other) {
+            return 0
+        }
+        val res = other.creationDateTime.compareTo(this.creationDateTime)
+        return if (res == 0) -1 else res
     }
 }

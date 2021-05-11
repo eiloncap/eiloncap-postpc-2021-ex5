@@ -5,7 +5,7 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "30.0.2"
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "exercise.android.reemh.todo_items"
@@ -44,7 +44,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     testImplementation 'org.robolectric:robolectric:4.5.1'
-    testImplementation 'org.mockito:mockito-core:3.2.0'
+    testImplementation "org.mockito:mockito-core:3.6.0"
     implementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0'
     implementation "androidx.core:core-ktx:+"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
