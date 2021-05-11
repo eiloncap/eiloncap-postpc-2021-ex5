@@ -4,7 +4,7 @@ import java.io.Serializable
 import java.time.LocalDateTime
 
 data class TodoItem(
-    val description: String = "",
+    val description: String,
     var isDone: Boolean = false,
     var deleteMode: Boolean = false,
     val creationDateTime: LocalDateTime = LocalDateTime.now()

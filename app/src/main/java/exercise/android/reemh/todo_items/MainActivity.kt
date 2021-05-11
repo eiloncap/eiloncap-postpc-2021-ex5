@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity() {
             holder.deleteItem(item)
             adapter.setTasks(holder.getCurrentItems())
         }
+        adapter.setTasks(holder.getCurrentItems())
         recyclerTodoItemsList.adapter = adapter
 
         buttonCreateTodoItem.setOnClickListener {
@@ -76,6 +77,3 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-// TODO: 1) problem with tests after converting to kotlin
-//       2) is TodoItemsHolder is really a holder?
-//       2) getter doesn't work with copy
