@@ -10,7 +10,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var holder: TodoItemsHolder
+    var holder: TodoItemsHolder? = null
     private lateinit var adapter: TodoItemAdapter
     private lateinit var recyclerTodoItemsList: RecyclerView
     private lateinit var editTextInsertTask: EditText
@@ -22,12 +22,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        if (holder == null) {
-//            holder = TodoItemsHolderImpl()
-//        }
-
-        // TODO: do something else to check that not initialized
-        if (!this::holder.isInitialized) {
+        if (holder == null) {
             holder = TodoItemsHolderImpl()
         }
 
@@ -40,24 +35,24 @@ class MainActivity : AppCompatActivity() {
         adapter = TodoItemAdapter()
         adapter.onItemClickCallback = { item, isChecked ->
             if (!item.isDone) {
-                holder.markItemDone(item)
+                holder!!.markItemDone(item)
             } else {
-                holder.markItemInProgress(item)
+                holder!!.markItemInProgress(item)
             }
-            adapter.setTasks(holder.getCurrentItems())
+            adapter.setTasks(holder!!.getCurrentItems())
         }
         adapter.onDeleteCallback = { item ->
-            holder.deleteItem(item)
-            adapter.setTasks(holder.getCurrentItems())
+            holder!!.deleteItem(item)
+            adapter.setTasks(holder!!.getCurrentItems())
         }
-        adapter.setTasks(holder.getCurrentItems())
+        adapter.setTasks(holder!!.getCurrentItems())
         recyclerTodoItemsList.adapter = adapter
 
         buttonCreateTodoItem.setOnClickListener {
             if (editTextInsertTask.text.isNotEmpty()) {
-                holder.addNewInProgressItem(editTextInsertTask.text.toString())
+                holder!!.addNewInProgressItem(editTextInsertTask.text.toString())
                 editTextInsertTask.text.clear()
-                adapter.setTasks(holder.getCurrentItems())
+                adapter.setTasks(holder!!.getCurrentItems())
             }
         }
     }
@@ -72,7 +67,7 @@ class MainActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         holder = savedInstanceState.getSerializable(HOLDER_STATE) as TodoItemsHolder
         editTextInsertTask.setText(savedInstanceState.getString(INPUT_STATE) as String)
-        adapter.setTasks(holder.getCurrentItems())
+        adapter.setTasks(holder!!.getCurrentItems())
 
     }
 }
