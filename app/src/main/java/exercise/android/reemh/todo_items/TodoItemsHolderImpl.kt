@@ -13,7 +13,7 @@ class TodoItemsHolderImpl : TodoItemsHolder {
     }
 
     override fun addNewInProgressItem(description: String) {
-        inProgressItems.add(TodoItem(description = description, isDone = false))
+        inProgressItems.add(TodoItem(description = description))
     }
 
     override fun markItemDone(item: TodoItem) {

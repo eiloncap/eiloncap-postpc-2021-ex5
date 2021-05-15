@@ -8,15 +8,23 @@
 
     <CheckBox
         android:id="@+id/checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/deleteButton"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="task"
         android:textSize="18sp"
-        android:translationZ="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/deleteButton"
+        app:layout_constraintTop_toTopOf="@id/checkBox"
+        app:layout_constraintBottom_toBottomOf="@id/checkBox"
         app:layout_constraintEnd_toStartOf="@id/textViewDateTime"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@id/checkBox"/>
 
     <TextView
         android:id="@+id/textViewDateTime"
@@ -34,9 +42,8 @@
         android:id="@+id/deleteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:translationZ="1dp"
-        android:visibility="gone"
         android:background="@null"
+        android:visibility="gone"
         android:tint="@color/red_700"
         app:srcCompat="@android:drawable/ic_menu_delete"
         app:layout_constraintBottom_toBottomOf="parent"

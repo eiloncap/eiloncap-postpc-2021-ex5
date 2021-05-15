@@ -9,17 +9,20 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
 
 class TodoItemAdapter :
     RecyclerView.Adapter<TodoItemAdapter.ViewHolder>() {
 
-    var onItemClickCallback: ((TodoItem, Boolean) -> Unit)? = null
+    var onItemCheckCallback: ((TodoItem) -> Unit)? = null
+    var onItemClickCallback: ((TodoItem) -> Unit)? = null
     var onDeleteCallback: ((TodoItem) -> Unit)? = null
     private val tasks: MutableList<TodoItem> = ArrayList()
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val checkBox: CheckBox = view.findViewById(R.id.checkBox)
+        val description: TextView = view.findViewById(R.id.description)
         val deleteButton: ImageButton = view.findViewById(R.id.deleteButton)
         val textViewDateTime: TextView = view.findViewById(R.id.textViewDateTime)
     }
@@ -42,39 +45,35 @@ class TodoItemAdapter :
         val view = holder.itemView
         val checkBox = holder.checkBox
         val deleteButton = holder.deleteButton
+        val description = holder.description
         val bgColor = if (position % 2 == 0)
             ContextCompat.getColor(view.context, R.color.white)
         else ContextCompat.getColor(view.context, R.color.blue_50)
         view.setBackgroundColor(bgColor)
 
-        holder.textViewDateTime.text =
-            DateTimeFormatter.ofPattern("dd/MM/yy\nHH:mm").format(todoItem.creationDateTime)
+        holder.textViewDateTime.text = todoItem.getCreationDateTimeStr()
 
         checkBox.setOnCheckedChangeListener(null)
-        checkBox.text = todoItem.description
+        description.text = todoItem.description
         checkBox.isChecked = todoItem.isDone
-        if (todoItem.isDone) {
-            checkBox.paintFlags =
-                checkBox.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-        } else {
-            checkBox.paintFlags =
-                checkBox.paintFlags and (Paint.STRIKE_THRU_TEXT_FLAG.inv())
-        }
-        if (todoItem.deleteMode) {
-            deleteButton.visibility = View.VISIBLE
-        } else {
-            deleteButton.visibility = View.GONE
-        }
+        description.paintFlags =
+            if (todoItem.isDone) description.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            else description.paintFlags and (Paint.STRIKE_THRU_TEXT_FLAG.inv())
+        deleteButton.visibility = if (todoItem.deleteMode) View.VISIBLE else View.GONE
 
-        checkBox.setOnCheckedChangeListener { _, isChecked ->
-            val callback = onItemClickCallback ?: return@setOnCheckedChangeListener
-            callback(todoItem, isChecked)
+        checkBox.setOnCheckedChangeListener { _, _ ->
+            val callback = onItemCheckCallback ?: return@setOnCheckedChangeListener
+            callback(todoItem)
         }
         deleteButton.setOnClickListener {
             val callback = onDeleteCallback ?: return@setOnClickListener
             callback(todoItem)
         }
-        checkBox.setOnLongClickListener(View.OnLongClickListener { v ->
+        description.setOnClickListener {
+            val callback = onItemClickCallback ?: return@setOnClickListener
+            callback(todoItem)
+        }
+        description.setOnLongClickListener {
             if (deleteButton.visibility == View.GONE) {
                 deleteButton.alpha = 0f
                 deleteButton.visibility = View.VISIBLE
@@ -85,8 +84,8 @@ class TodoItemAdapter :
                 deleteButton.visibility = View.GONE
                 todoItem.deleteMode = false
             }
-            return@OnLongClickListener true
-        })
+            return@setOnLongClickListener true
+        }
     }
 
     override fun getItemCount(): Int {
