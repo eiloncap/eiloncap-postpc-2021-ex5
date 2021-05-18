@@ -13,19 +13,26 @@ data class TodoItem(
     private val creationDT: Date = Date()
 ) : Serializable, Comparable<TodoItem> {
 
+    // todo: convert to string individually?
+
+    var id: String? = null
     private var lastModified: Date = creationDT
 
     companion object {
-        val DATE_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yy")
-        val TIME_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+        private val DATE_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yy")
+        private val TIME_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
     }
 
     override fun compareTo(other: TodoItem): Int {
-        if (this === other) {
+        if (this == other) {
             return 0
         }
-        val res = other.creationDT.compareTo(this.creationDT)
+        val res = other.getCreationDateTime().compareTo(this.getCreationDateTime())
         return if (res == 0) -1 else res
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return other is TodoItem && this.id == other.id
     }
 
     fun getCreationDateTimeStr(delimiter: String = "\n"): String {
@@ -47,12 +54,6 @@ data class TodoItem(
         lastModified = Date()
     }
 
-    fun update(item: TodoItem) {
-        description = item.description
-        isDone = item.isDone
-        lastModified = item.lastModified
-    }
-
     fun getModificationDateTime(): LocalDateTime {
         return lastModified.toInstant()
             .atZone(ZoneId.systemDefault())
@@ -63,5 +64,9 @@ data class TodoItem(
         return creationDT.toInstant()
             .atZone(ZoneId.systemDefault())
             .toLocalDateTime()
+    }
+
+    override fun hashCode(): Int {
+        return id?.hashCode() ?: 0
     }
 }

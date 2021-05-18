@@ -1,6 +1,5 @@
 package exercise.android.reemh.todo_items
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,8 +11,13 @@ import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
 
-class TodoItemEditActivity : AppCompatActivity() {
+class EditTodoItemActivity : AppCompatActivity() {
 
+    companion object {
+        private const val ITEM_ID_STATE: String = "item_in_edit_id"
+    }
+
+    private var holder: TodoItemsHolder? = null
     private lateinit var item: TodoItem
     private lateinit var creationDate: TextView
     private lateinit var modificationDate: TextView
@@ -24,14 +28,20 @@ class TodoItemEditActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_edit)
 
+        if (holder == null) {
+            holder = TodoApp.instance.holder
+        }
+
         creationDate = findViewById(R.id.creationDate)
         modificationDate = findViewById(R.id.modificationDate)
         description = findViewById(R.id.descriptionEditText)
         checkBox = findViewById(R.id.checkBox)
 
-        item = (if (savedInstanceState?.containsKey("item_in_edit") == true)
-            savedInstanceState.getSerializable("item_in_edit")
-        else intent.getSerializableExtra("item")) as TodoItem
+        item = holder!!.getItem(
+            (if (savedInstanceState?.containsKey(ITEM_ID_STATE) == true)
+                savedInstanceState.getSerializable(ITEM_ID_STATE)
+            else intent.getStringExtra("item_id")) as String
+        )
 
         creationDate.text = item.getCreationDateTimeStr(delimiter = " at ")
         description.setText(item.description)
@@ -40,26 +50,21 @@ class TodoItemEditActivity : AppCompatActivity() {
 
         description.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
-                item.description = description.text.toString()
-                item.markModified()
+                val descriptionAsString = description.text.toString()
+                holder?.editItemDescription(item, descriptionAsString)
                 modificationDate.text = updateModificationDate()
             }
 
-            override fun beforeTextChanged(
-                s: CharSequence, start: Int,
-                count: Int, after: Int
-            ) {
-            }
-
-            override fun onTextChanged(
-                s: CharSequence, start: Int,
-                before: Int, count: Int
-            ) {
-            }
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
         })
 
-        checkBox.setOnCheckedChangeListener { _, isChecked ->
-            item.isDone = isChecked
+        checkBox.setOnCheckedChangeListener { _, isChecked: Boolean ->
+            if (isChecked) {
+                holder?.markItemDone(item)
+            } else {
+                holder?.markItemInProgress(item)
+            }
         }
     }
 
@@ -74,16 +79,8 @@ class TodoItemEditActivity : AppCompatActivity() {
         return "${ChronoUnit.MINUTES.between(modified, now)} minutes ago"
     }
 
-    override fun onPause() {
-        super.onPause()
-        val broadcast = Intent()
-            .setAction("item_modified")
-            .putExtra("returned_item", item)
-        this.sendBroadcast(broadcast)
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putSerializable("item_in_edit", item)
+        outState.putSerializable(ITEM_ID_STATE, item.id)
     }
 }

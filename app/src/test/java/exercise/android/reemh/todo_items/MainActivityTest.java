@@ -3,6 +3,9 @@ package exercise.android.reemh.todo_items;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import java.util.*;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -113,7 +116,7 @@ public class MainActivityTest extends TestCase {
         ArrayList<TodoItem> itemsReturnedByHolder = new ArrayList<>();
         Mockito.when(mockHolder.getCurrentItems())
                 .thenReturn(itemsReturnedByHolder);
-        TodoItem itemInProgress = new TodoItem("do homework", false, false, LocalDateTime.now());
+        TodoItem itemInProgress = new TodoItem("do homework", false, false, new Date());
         itemsReturnedByHolder.add(itemInProgress);
 
         // test - let the activity think it is being shown
@@ -131,8 +134,9 @@ public class MainActivityTest extends TestCase {
         // 2. verify that the shown view has a checkbox being not-checked and has a TextView showing the correct description
         View viewInRecycler = recyclerView.findViewHolderForAdapterPosition(0).itemView;
         CheckBox checkBox = viewInRecycler.findViewById(R.id.checkBox);
+        TextView description = viewInRecycler.findViewById(R.id.description);
         assertFalse(checkBox.isChecked());
-        assertEquals("do homework", checkBox.getText());
+        assertEquals("do homework", description.getText());
     }
 
 
@@ -144,7 +148,7 @@ public class MainActivityTest extends TestCase {
         ArrayList<TodoItem> itemsReturnedByHolder = new ArrayList<>();
         Mockito.when(mockHolder.getCurrentItems())
                 .thenReturn(itemsReturnedByHolder);
-        TodoItem itemDone = new TodoItem("buy tomatoes", true, false, LocalDateTime.now());
+        TodoItem itemDone = new TodoItem("buy tomatoes", true, false, new Date());
         itemsReturnedByHolder.add(itemDone);
 
         // test - let the activity think it is being shown
@@ -162,7 +166,8 @@ public class MainActivityTest extends TestCase {
         // 2. verify that the shown view has a checkbox being checked and has a TextView showing the correct description
         View viewInRecycler = recyclerView.findViewHolderForAdapterPosition(0).itemView;
         CheckBox checkBox = viewInRecycler.findViewById(R.id.checkBox);
+        TextView description = viewInRecycler.findViewById(R.id.description);
         assertTrue(checkBox.isChecked());
-        assertEquals("buy tomatoes", checkBox.getText());
+        assertEquals("buy tomatoes", description.getText());
     }
 }
